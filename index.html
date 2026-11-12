@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Interés Simple</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #eff6ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            margin: 0;
+        }
+
+        .contenedor {
+            background: white;
+            width: 100%;
+            max-width: 460px;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(30, 64, 175, 0.12);
+        }
+
+        .encabezado {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .icono {
+            font-size: 38px;
+        }
+
+        h1 {
+            color: #1e40af;
+            margin: 10px 0;
+            font-size: 27px;
+        }
+
+        .descripcion {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .campo {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .ayuda {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 9px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            background: #f8fafc;
+            color: #1e293b;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 3px #2563eb20;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        #resultado {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 12px;
+            border: 1px solid #bfdbfe;
+        }
+
+        #resultado h3 {
+            color: #1e40af;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .dato {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #dbeafe;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .dato strong {
+            color: #1e40af;
+            text-align: right;
+        }
+
+        .total {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .formula {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 9px;
+            text-align: center;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .pie {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <div class="encabezado">
+        <div class="icono">💰</div>
+        <h1>Interés Simple</h1>
+        <p class="descripcion">
+            Calcula fácilmente los intereses generados
+            a partir de un capital, una tasa y un tiempo.
+        </p>
+    </div>
+
+    <div class="campo">
+        <label for="capital">1. Capital inicial ($ COP)</label>
+        <span class="ayuda">
+            Dinero que deseas invertir o prestar.
+            Ejemplo: 100000
+        </span>
+        <input type="number" id="capital"
+        placeholder="Ingresa el capital inicial" min="0">
+    </div>
+
+    <div class="campo">
+        <label for="tasa">2. Tasa de interés anual (%)</label>
+        <span class="ayuda">
+            Porcentaje de interés que se genera cada año.
+            Ejemplo: 10
+        </span>
+        <input type="number" id="tasa"
+        placeholder="Ingresa la tasa de interés" min="0" step="any">
+    </div>
+
+    <div class="campo">
+        <label for="tiempo">3. Tiempo (años)</label>
+        <span class="ayuda">
+            Duración de la inversión expresada en años.
+            Ejemplo: 2
+        </span>
+        <input type="number" id="tiempo"
+        placeholder="Ingresa el tiempo en años" min="0" step="any">
+    </div>
+
+    <button onclick="calcular()">
+        Calcular interés
+    </button>
+
+    <p id="error" class="error"></p>
+
+    <div id="resultado">
+        <h3>📊 Resultados del cálculo</h3>
+
+        <div class="dato">
+            <span>Capital inicial:</span>
+            <strong id="resCapital"></strong>
+        </div>
+
+        <div class="dato">
+            <span>Interés generado:</span>
+            <strong id="resInteres"></strong>
+        </div>
+
+        <div class="dato total">
+            <span>Monto total:</span>
+            <strong id="resTotal"></strong>
+        </div>
+    </div>
+
+    <div class="formula">
+        <strong>Fórmula utilizada:</strong>
+        <p>I = (Capital × Tasa × Tiempo) / 100</p>
+    </div>
+
+    <div class="pie">
+        Proyecto académico | Calculadora de Interés Simple
+    </div>
+
+</div>
+
+<script>
+function calcular() {
+
+    let capital = parseFloat(document.getElementById("capital").value);
+    let tasa = parseFloat(document.getElementById("tasa").value);
+    let tiempo = parseFloat(document.getElementById("tiempo").value);
+
+    let error = document.getElementById("error");
+    let resultado = document.getElementById("resultado");
+
+    error.innerHTML = "";
+    resultado.style.display = "none";
+
+    if (!Number.isFinite(capital) ||
+        !Number.isFinite(tasa) ||
+        !Number.isFinite(tiempo) ||
+        capital <= 0 || tasa < 0 || tiempo < 0) {
+
+        error.innerHTML =
+        "Por favor, completa todos los campos con valores válidos.";
+
+        return;
+    }
+
+    let interes = (capital * tasa * tiempo) / 100;
+    let monto = capital + interes;
+
+    let formato = new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 2
+    });
+
+    document.getElementById("resCapital").innerText =
+        formato.format(capital);
+
+    document.getElementById("resInteres").innerText =
+        formato.format(interes);
+
+    document.getElementById("resTotal").innerText =
+        formato.format(monto);
+
+    resultado.style.display = "block";
+}
+</script>
+
+</body>
+</html>
